@@ -12,15 +12,20 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.myrestapi.bean.SwapGenderRequest;
 import com.example.myrestapi.entity.User;
 import com.example.myrestapi.repository.UserRepository;
+import com.example.myrestapi.service.UserService;
 
 @RestController
 public class UserController {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
+	@Autowired
+	private UserService userService;
+
 	@GetMapping("/hello")
 	public String hello() {
 		return "hello";
@@ -28,19 +33,16 @@ public class UserController {
 
 	@GetMapping("/users")
 	public List<User> getUsers() {
-		//List<User> users = new ArrayList<>();
-		//users.add(user);
-		//users.add(user2);
-		//System.out.println(users);
+		// List<User> users = new ArrayList<>();
+		// users.add(user);
+		// users.add(user2);
+		// System.out.println(users);
 		return this.userRepository.findAll();
 	}
 
 	@GetMapping("/user/{userId}")
 	public User getUserById(@PathVariable("userId") Long userId) {
-
-		System.out.println(userId);
 		User userById = this.userRepository.findByUserId(userId);
-		System.out.println(userById);
 		return userById;
 	}
 
@@ -54,22 +56,37 @@ public class UserController {
 		return this.userRepository.save(user);
 	}
 
-	@PutMapping("/useractive")
-	public User updateUserActive(@RequestBody User user) {
+	@PutMapping("/useractive/{userId}")
+	public User updateUserActive(@PathVariable("userId") Long userId) {
+		return this.userService.swapActive(userId);
+	}
+
+	@PostMapping("/user-swap-gender")
+	public User updateSwapGender(@RequestBody SwapGenderRequest req) {
+		return this.userService.swapGender(req.getUserId());
+	}
+	
+	@PutMapping("/userverify")
+	public User updateUserVerify(@RequestBody User user) {
 		Long userId = user.getUserId();
-		Boolean userActive = user.getActive();
+		Boolean verify = user.getVerifyCheck();
 		User userById = this.userRepository.findByUserId(userId);
 		if (userById != null) {
-			userById.setActive(userActive);
+			userById.setVerifyCheck(verify);
 			this.userRepository.save(userById);
 		}
 		return userById;
 	}
-	
+
 	@DeleteMapping("/user/{userId}")
 	public void deleteUser(@PathVariable("userId") Long userId) {
 		System.out.println(userId);
 		this.userRepository.deleteById(userId);
+	}
+
+	@PutMapping("/user/reset-verify")
+	public void resetVerifyChecked() {
+		this.userService.resetVerifyCheck();
 	}
 
 }

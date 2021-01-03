@@ -13,7 +13,6 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
 	private Long userId;
 
 	@Column
@@ -39,17 +38,12 @@ public class User {
 
 	@Column
 	private Boolean movie;
-	
+
 	@Column
 	private Boolean active;
 
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+	@Column
+	private Boolean verifyCheck;
 
 	public Long getUserId() {
 		return userId;
@@ -122,4 +116,22 @@ public class User {
 	public void setMovie(Boolean movie) {
 		this.movie = movie;
 	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public Boolean getVerifyCheck() {
+		return verifyCheck;
+	}
+
+	public void setVerifyCheck(Boolean verifyCheck) {
+		this.verifyCheck = verifyCheck;
+	}
+
+
 }
